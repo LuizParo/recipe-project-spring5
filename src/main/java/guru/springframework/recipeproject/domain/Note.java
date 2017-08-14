@@ -16,7 +16,7 @@ import javax.persistence.OneToOne;
 public class Note {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Access(AccessType.FIELD)
     private Long id;
 

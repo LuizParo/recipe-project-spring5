@@ -14,7 +14,7 @@ import javax.persistence.Id;
 public class UnitOfMeasure {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Access(AccessType.FIELD)
     private Long id;
 

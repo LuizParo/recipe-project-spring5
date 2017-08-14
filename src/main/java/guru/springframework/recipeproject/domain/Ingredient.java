@@ -16,7 +16,7 @@ import javax.persistence.ManyToOne;
 public class Ingredient {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Access(AccessType.FIELD)
     private Long id;
 
