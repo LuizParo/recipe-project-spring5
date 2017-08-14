@@ -2,7 +2,6 @@ package guru.springframework.recipeproject.domain;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Optional;
 
 import javax.persistence.Access;
@@ -14,9 +13,14 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import static java.util.Objects.requireNonNull;
 
 @Entity
 public class Recipe {
@@ -52,6 +56,7 @@ public class Recipe {
     private final Byte[] image;
 
     @Enumerated(value = EnumType.STRING)
+    @Access(AccessType.FIELD)
     private final Difficulty difficulty;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -59,7 +64,17 @@ public class Recipe {
     private Note note;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
-    private Collection<Ingredient> ingredients = new HashSet<>();
+    @Access(AccessType.FIELD)
+    private final Collection<Ingredient> ingredients = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "recipe_category",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    @Access(AccessType.FIELD)
+    private final Collection<Category> categories = new HashSet<>();
 
     @Deprecated
     Recipe() {
@@ -75,15 +90,15 @@ public class Recipe {
     }
 
     public Recipe(String description, Integer prepTime, Integer cookTime, Integer servings, String source, String url, String directions, Byte[] image, Difficulty difficulty) {
-        this.description = Objects.requireNonNull(description, "description can't be null when creating " + this.getClass().getSimpleName());
-        this.prepTime = Objects.requireNonNull(prepTime, "prepTime can't be null when creating " + this.getClass().getSimpleName());
-        this.cookTime = Objects.requireNonNull(cookTime, "cookTime can't be null when creating " + this.getClass().getSimpleName());
-        this.servings = Objects.requireNonNull(servings, "servings can't be null when creating " + this.getClass().getSimpleName());
-        this.source = Objects.requireNonNull(source, "source can't be null when creating " + this.getClass().getSimpleName());
-        this.url = Objects.requireNonNull(url, "url can't be null when creating " + this.getClass().getSimpleName());
-        this.directions = Objects.requireNonNull(directions, "directions can't be null when creating " + this.getClass().getSimpleName());
-        this.image = Objects.requireNonNull(image, "image can't be null when creating " + this.getClass().getSimpleName());
-        this.difficulty = Objects.requireNonNull(difficulty, "difficulty can't be null when creating " + this.getClass().getSimpleName());
+        this.description = requireNonNull(description, "description can't be null when creating " + this.getClass().getSimpleName());
+        this.prepTime = requireNonNull(prepTime, "prepTime can't be null when creating " + this.getClass().getSimpleName());
+        this.cookTime = requireNonNull(cookTime, "cookTime can't be null when creating " + this.getClass().getSimpleName());
+        this.servings = requireNonNull(servings, "servings can't be null when creating " + this.getClass().getSimpleName());
+        this.source = requireNonNull(source, "source can't be null when creating " + this.getClass().getSimpleName());
+        this.url = requireNonNull(url, "url can't be null when creating " + this.getClass().getSimpleName());
+        this.directions = requireNonNull(directions, "directions can't be null when creating " + this.getClass().getSimpleName());
+        this.image = requireNonNull(image, "image can't be null when creating " + this.getClass().getSimpleName());
+        this.difficulty = requireNonNull(difficulty, "difficulty can't be null when creating " + this.getClass().getSimpleName());
     }
 
     public Optional<Long> getId() {
@@ -138,9 +153,19 @@ public class Recipe {
         return new HashSet<>(this.ingredients);
     }
 
+    public Collection<Category> getCategories() {
+        return new HashSet<>(this.categories);
+    }
+
     public void addIngredients(Ingredient... ingredients) {
         for(Ingredient ingredient : ingredients) {
             this.ingredients.add(ingredient);
+        }
+    }
+
+    public void addCategories(Category... categories) {
+        for(Category category : categories) {
+            this.categories.add(category);
         }
     }
 }
