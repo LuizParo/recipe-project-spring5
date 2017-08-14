@@ -28,6 +28,11 @@ public class Category {
     @Access(AccessType.FIELD)
     private final Collection<Recipe> recipes = new HashSet<>();
 
+    @Deprecated
+    Category() {
+        this("");
+    }
+
     public Category(String description) {
         this.description = requireNonNull(description, "description can't be null when creating " + this.getClass().getSimpleName());
     }
