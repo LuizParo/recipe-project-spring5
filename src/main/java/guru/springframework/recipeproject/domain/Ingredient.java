@@ -42,11 +42,11 @@ public class Ingredient {
         this.unit = null;
     }
 
-    public Ingredient(String description, BigDecimal amount, Recipe recipe, UnitOfMeasure unit) {
+    public Ingredient(String description, BigDecimal amount, UnitOfMeasure unit, Recipe recipe) {
         this.description = Objects.requireNonNull(description, "description can't be null when creating " + this.getClass().getSimpleName());
         this.amount = Objects.requireNonNull(amount, "amount can't be null when creating " + this.getClass().getSimpleName());
-        this.recipe = Objects.requireNonNull(recipe, "recipe can't be null when creating " + this.getClass().getSimpleName());
         this.unit = Objects.requireNonNull(unit, "unit can't be null when creating " + this.getClass().getSimpleName());
+        this.recipe = Objects.requireNonNull(recipe, "recipe can't be null when creating " + this.getClass().getSimpleName());
     }
 
     public Optional<Long> getId() {

@@ -1,7 +1,7 @@
 package guru.springframework.recipeproject.domain;
 
 public enum Difficulty {
-    EAST,
-    MODERATED,
+    EASY,
+    MODERATE,
     HARD;
 }

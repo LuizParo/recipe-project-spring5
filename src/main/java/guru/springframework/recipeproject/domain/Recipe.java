@@ -48,6 +48,7 @@ public class Recipe {
     @Access(AccessType.FIELD)
     private final String url;
 
+    @Lob
     @Access(AccessType.FIELD)
     private final String directions;
 
@@ -59,7 +60,7 @@ public class Recipe {
     @Access(AccessType.FIELD)
     private final Difficulty difficulty;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "recipe")
     @Access(AccessType.FIELD)
     private Note note;
 
@@ -159,13 +160,17 @@ public class Recipe {
 
     public void addIngredients(Ingredient... ingredients) {
         for(Ingredient ingredient : ingredients) {
-            this.ingredients.add(ingredient);
+            if(!this.ingredients.contains(ingredient)) {
+                this.ingredients.add(ingredient);
+            }
         }
     }
 
     public void addCategories(Category... categories) {
         for(Category category : categories) {
-            this.categories.add(category);
+            if(!this.categories.contains(category)) {
+                this.categories.add(category);
+            }
         }
     }
 }
