@@ -1,5 +1,8 @@
 package guru.springframework.recipeproject.domain;
 
+import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
@@ -19,8 +22,6 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-
-import static java.util.Objects.requireNonNull;
 
 @Entity
 public class Recipe {
@@ -172,5 +173,11 @@ public class Recipe {
                 this.categories.add(category);
             }
         }
+    }
+
+    public String getNoteDescription() {
+        return nonNull(this.note)
+                ? this.note.getRecipeNote()
+                : "";
     }
 }
