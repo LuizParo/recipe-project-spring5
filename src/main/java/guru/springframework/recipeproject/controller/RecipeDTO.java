@@ -1,5 +1,7 @@
 package guru.springframework.recipeproject.controller;
 
+import static com.google.common.collect.Lists.newArrayList;
+
 import java.io.Serializable;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -23,6 +25,8 @@ public final class RecipeDTO implements Serializable {
     private final Byte[] image;
     private final String difficulty;
     private final String note;
+    private final Iterable<IngredientDTO> ingredients;
+    private final Iterable<CategoryDTO> categories;
 
     @JsonCreator
     public RecipeDTO(@JsonProperty("id") Long id,
@@ -35,7 +39,9 @@ public final class RecipeDTO implements Serializable {
                      @JsonProperty("directions") String directions,
                      @JsonProperty("image") Byte[] image,
                      @JsonProperty("difficulty") String difficulty,
-                     @JsonProperty("note") String note) {
+                     @JsonProperty("note") String note,
+                     @JsonProperty("ingredients") Iterable<IngredientDTO> ingredients,
+                     @JsonProperty("categories") Iterable<CategoryDTO> categories) {
         this.id = id;
         this.description = description;
         this.prepTime = prepTime;
@@ -47,6 +53,8 @@ public final class RecipeDTO implements Serializable {
         this.image = image;
         this.difficulty = difficulty;
         this.note = note;
+        this.ingredients = ingredients;
+        this.categories = categories;
     }
 
     public Long getId() {
@@ -93,9 +101,19 @@ public final class RecipeDTO implements Serializable {
         return note;
     }
 
+    public Iterable<IngredientDTO> getIngredients() {
+        return ingredients;
+    }
+
+    public Iterable<CategoryDTO> getCategories() {
+        return newArrayList(categories);
+    }
+
     public static RecipeDTO toDTO(Recipe recipe) {
         Long id = recipe.getId().orElse(null);
         String difficulty = recipe.getDifficulty().toString();
+        Iterable<IngredientDTO> ingredients = IngredientDTO.toDTO(recipe.getIngredients());
+        Iterable<CategoryDTO> categories = CategoryDTO.toDTO(recipe.getCategories());
 
         return new RecipeDTO(
                 id,
@@ -108,8 +126,9 @@ public final class RecipeDTO implements Serializable {
                 recipe.getDirections(),
                 recipe.getImage(),
                 difficulty,
-                recipe.getNoteDescription()
-        );
+                recipe.getNoteDescription(),
+                ingredients,
+                categories);
     }
 
     public static Iterable<RecipeDTO> toDTO(Iterable<Recipe> recipes) {
