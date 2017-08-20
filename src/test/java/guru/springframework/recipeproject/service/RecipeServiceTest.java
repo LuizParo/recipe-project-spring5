@@ -2,11 +2,17 @@ package guru.springframework.recipeproject.service;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,6 +43,22 @@ public class RecipeServiceTest {
         verify(this.recipeRepository, only()).findAll();
         assertEquals(1, ((Collection<Recipe>) recipes).size());
     }
+
+    @Test
+    public void getRecipeById() throws Exception {
+        Recipe recipe = this.createRecipe();
+        Optional<Recipe> recipeOptional = Optional.of(recipe);
+
+        when(this.recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
+        Optional<Recipe> recipeReturned = this.recipeService.findById(1L);
+
+        assertNotNull("Null recipe returned", recipeReturned);
+        assertTrue(recipeReturned.isPresent());
+        verify(this.recipeRepository, times(1)).findById(anyLong());
+        verify(this.recipeRepository, never()).findAll();
+    }
+
 
     private Recipe createRecipe() {
         return new Recipe(
